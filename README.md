@@ -12,13 +12,11 @@
 
 - Technologies used: ASP.NET Core Web API v6, Angular v14.1.0, Tailwind CSS v3.1.4
 
-##### Screenshots
+#### Screenshots
 
 Login page
 
 <img title="" src="./Screenshots/Login.png" alt="">
-
-
 
 Notes home page
 
