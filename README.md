@@ -1,12 +1,12 @@
 ## Notes App
 
-- Simple note taking app. You can signup to the app. Basic validations added in every form
+- Simple note-taking app. Users can sign up and login to the app. Basic validations added in every form
 
 - Username already exist check - async validation implemented in signup component
 
-- Authorization done using JWT
+- Authorization implemented using JWT
 
-- User can add, edit, update, delete and search your notes
+- Users can add, edit, update, delete and search their notes
 
 - Styling is done using Tailwind CSS
 
