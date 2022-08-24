@@ -1,8 +1,8 @@
 ## Notes App
 
-- Simple note-taking app. Users can sign up and login to the app. Basic validations added in every form
+- Simple note-taking app. Users can sign up and login into the app. Authorization implemented using JWT
 
-- Username already exist check - async validation implemented in signup component
+- Users can add, edit, update, delete and search their notes
 
 - Authorization implemented using JWT
 
@@ -10,7 +10,7 @@
 
 - Styling is done using Tailwind CSS
 
-- Technologies used: ASP.NET Core Web API v6, Angular v14.1.0, Tailwind CSS v3.1.4
+- Technologies used: ASP.NET Core Web API v6, Angular v14, Tailwind CSS
 
 #### Screenshots
 
