@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ServerApp.Data;
 using ServerApp.Entities;
 
 namespace ServerApp.Interfaces
@@ -13,5 +10,6 @@ namespace ServerApp.Interfaces
         void UpdateNote(Note note, int userId);
         void DeleteNote(int noteId, int userId);
         Note AddNote(Note note, int userId);
+        void DbContext(DataContext context);
     }
 }

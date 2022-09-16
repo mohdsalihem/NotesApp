@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ServerApp.Interfaces;
 using ServerApp.Entities;
 using Microsoft.Extensions.Options;
@@ -17,36 +13,45 @@ namespace ServerApp.Services
     public class UserService : IUserService
     {
         private readonly Credentials _credentials;
+        private DataContext _context;
         public UserService(IOptions<Credentials> credentials)
         {
             _credentials = credentials.Value;
         }
 
-        public User Login(AuthRequest request)
+        public AuthResponse Login(AuthRequest request)
         {
-            var user = UserData.Values.SingleOrDefault(x => x.username == request.username && x.password == request.password);
-
+            var user = _context.Users.SingleOrDefault(x => x.username == request.username && x.password == request.password);
             if (user == null) return null;
 
-            var token = generateJwtToken(user);
+            var JwtToken = generateJwtToken(user);
 
-            return new User(user, token);
+            return new AuthResponse()
+            {
+                userId = user.userId,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                username = user.username,
+                token = JwtToken
+            };
         }
 
-        public User Signup(User user)
+        public AuthResponse Signup(User user)
         {
-            if (UserData.Values.Any(x => x.username == user.username))
+
+            if (_context.Users.Any(x => x.username == user.username))
             {
                 throw new Exception("Username already exist. Please try another username.");
             }
-            UserData.Values.Add(new User()
+
+            _context.Users.Add(new User()
             {
-                userId = UserData.Values.Max(x => x.userId) + 1,
                 firstName = user.firstName,
                 lastName = user.lastName,
                 username = user.username,
                 password = user.password
             });
+            _context.SaveChanges();
 
             var authRequest = new AuthRequest()
             {
@@ -58,7 +63,7 @@ namespace ServerApp.Services
 
         public string CheckUsernameExist(string username)
         {
-            var user = UserData.Values.FirstOrDefault(x => x.username == username);
+            var user = _context.Users.FirstOrDefault(x => x.username == username);
             if (user is null) return null;
 
             return user.username;
@@ -78,6 +83,11 @@ namespace ServerApp.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public void DbContext(DataContext context)
+        {
+            _context = context;
         }
     }
 }

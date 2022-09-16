@@ -1,14 +1,8 @@
-using System.Net.Http;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using ServerApp.Interfaces;
 using ServerApp.Entities;
 using ServerApp.Helpers;
+using ServerApp.Data;
 
 namespace ServerApp.Controllers
 {
@@ -18,9 +12,10 @@ namespace ServerApp.Controllers
     {
         private readonly INoteService _noteService;
 
-        public NoteController(INoteService noteService)
+        public NoteController(INoteService noteService, DataContext context)
         {
             _noteService = noteService;
+            _noteService.DbContext(context);
         }
 
         [HttpGet]

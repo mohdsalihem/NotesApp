@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using ServerApp.Data;
 using ServerApp.Entities;
 using ServerApp.Interfaces;
 
@@ -15,9 +10,10 @@ namespace ServerApp.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, DataContext context)
         {
             _userService = userService;
+            _userService.DbContext(context);
         }
 
         [HttpPost]

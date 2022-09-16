@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ServerApp.Data;
 using ServerApp.Entities;
 
 namespace ServerApp.Interfaces
 {
     public interface IUserService
     {
-        User Login(AuthRequest request);
-        User Signup(User user);
+        AuthResponse Login(AuthRequest request);
+        AuthResponse Signup(User user);
         string CheckUsernameExist(string username);
+        void DbContext(DataContext context);
     }
 }
