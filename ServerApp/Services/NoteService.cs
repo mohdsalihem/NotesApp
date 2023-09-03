@@ -1,68 +1,48 @@
-using ServerApp.Interfaces;
+﻿using AutoMapper;
 using ServerApp.Entities;
-using ServerApp.Data;
+using ServerApp.Models;
+using ServerApp.Repositories.Interfaces;
+using ServerApp.Services.Interfaces;
 
-namespace ServerApp.Services
+namespace ServerApp.Services;
+
+public class NoteService : INoteService
 {
-    public class NoteService : INoteService
+    private readonly INoteRepository noteRepository;
+    private readonly IMapper mapper;
+
+    public NoteService(INoteRepository noteRepository, IMapper mapper)
     {
-        private DataContext _context;
-        public List<Note> GetUserNotes(int userId)
-        {
-            return _context.Notes.Where(x => x.userId == userId).ToList();
-        }
+        this.noteRepository = noteRepository;
+        this.mapper = mapper;
+    }
 
-        public Note GetNote(int noteId, int userId)
-        {
-            var note = _context.Notes.FirstOrDefault(x => x.noteId == noteId && x.userId == userId);
-            if (note is null)
-            {
-                throw new Exception("Note not found.");
-            }
-            return note;
-        }
+    public async Task<IEnumerable<Note>> GetAll()
+    {
+        return await noteRepository.GetAll();
+    }
 
-        public void UpdateNote(Note note, int userId)
-        {
-            var oldNote = _context.Notes.FirstOrDefault(x => x.noteId == note.noteId && x.userId == userId);
+    public async Task<Note> Get(int id)
+    {
+        return await noteRepository.Get(id);
+    }
 
-            if (oldNote is null)
-            {
-                throw new Exception("Note not found. Can't update data.");
-            }
+    public async Task<int> Insert(NoteRequest noteRequest)
+    {
+        Note note = mapper.Map<Note>(noteRequest);
 
-            oldNote.title = note.title;
-            oldNote.description = note.description;
-            oldNote.modifiedDate = note.modifiedDate;
-            _context.Notes.Update(oldNote);
-            _context.SaveChanges();
-        }
+        return await noteRepository.Insert(note);
+    }
 
-        public void DeleteNote(int noteId, int userId)
-        {
-            var note = _context.Notes.FirstOrDefault(x => x.noteId == noteId && x.userId == userId);
+    public async Task<int> Update(NoteRequest noteRequest)
+    {
+        Note note = mapper.Map<Note>(noteRequest);
 
-            if (note is null)
-            {
-                throw new Exception("Note not found. Can't delete data.");
-            }
-            _context.Notes.Remove(note);
-            _context.SaveChanges();
-        }
+        return await noteRepository.Update(noteRequest);
+    }
 
-        public Note AddNote(Note note, int userId)
-        {
-            note.userId = userId;
-            note.createdDate = DateTime.Now;
-            note.modifiedDate = DateTime.Now;
-            _context.Notes.Add(note);
-            _context.SaveChanges();
-            return note;
-        }
-
-        public void DbContext(DataContext context)
-        {
-            _context = context;
-        }
+    public async Task<int> Delete(int id)
+    {
+        return await noteRepository.Delete(id);
     }
 }

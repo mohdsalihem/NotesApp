@@ -1,33 +1,59 @@
 using ServerApp.Helpers;
-using ServerApp.Interfaces;
-using ServerApp.Services;
-using Microsoft.EntityFrameworkCore;
-using ServerApp.Data;
+using Autofac;
+using System.Reflection;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers(c =>
+{
+    c.Filters.Add<AuthorizeAttribute>();
+});
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(option =>
+{
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
-builder.Services.AddControllers();
 
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+builder.Services.AddHttpContextAccessor();
+builder.Services.Configure<JwtCredentials>(builder.Configuration.GetSection("JwtCredentials"));
+builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.Configure<Credentials>(builder.Configuration.GetSection("Credentials"));
-builder.Services.AddScoped<INoteService, NoteService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacRegisterModule()));
 
 var app = builder.Build();
 
@@ -38,12 +64,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<JwtMiddleware>();
+
+app.UseAuthorization();
+
 app.MapControllers();
 app.UseCors();
 app.UseAuthorization();
 
-// Custom jwt auth middleware
-app.UseMiddleware<JwtMiddleware>();
-
-app.Run("http://localhost:4300");
+app.Run();

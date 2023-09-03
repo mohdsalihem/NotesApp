@@ -1,75 +1,48 @@
-using Microsoft.AspNetCore.Mvc;
-using ServerApp.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServerApp.Entities;
-using ServerApp.Helpers;
-using ServerApp.Data;
+using ServerApp.Models;
+using ServerApp.Services.Interfaces;
 
-namespace ServerApp.Controllers
+namespace ServerApp.Controllers;
+
+[Route("api/[controller]/[action]")]
+[ApiController]
+public class NoteController : ControllerBase
 {
-    [Authorize]
-    [Route("[controller]/[action]")]
-    public class NoteController : Controller
+    private readonly INoteService noteService;
+
+    public NoteController(INoteService noteService)
     {
-        private readonly INoteService _noteService;
+        this.noteService = noteService;
+    }
 
-        public NoteController(INoteService noteService, DataContext context)
-        {
-            _noteService = noteService;
-            _noteService.DbContext(context);
-        }
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Note>>> GetAll()
+    {
+        return Ok(await noteService.GetAll());
+    }
 
-        [HttpGet]
-        public IActionResult GetUserNotes()
-        {
-            var userId = (int)HttpContext.Items["userId"];
-            var notes = _noteService.GetUserNotes(userId);
-            return Ok(notes);
-        }
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<IEnumerable<Note>>> Get(int id)
+    {
+        return Ok(await noteService.Get(id));
+    }
 
-        [HttpGet]
-        public IActionResult GetNote(int noteId)
-        {
-            try
-            {
-                var userId = (int)HttpContext.Items["userId"];
-                var note = _noteService.GetNote(noteId, userId);
-                return Ok(note);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+    [HttpPost]
+    public async Task<ActionResult<int>> Insert(NoteRequest noteRequest)
+    {
+        return CreatedAtAction(nameof(Insert), await noteService.Insert(noteRequest));
+    }
 
-        [HttpPut]
-        public IActionResult UpdateNote([FromBody] Note note)
-        {
-            try
-            {
-                var userId = (int)HttpContext.Items["userId"];
-                _noteService.UpdateNote(note, userId);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+    [HttpPut]
+    public async Task<ActionResult<int>> Update(NoteRequest noteRequest)
+    {
+        return Ok(await noteService.Update(noteRequest));
+    }
 
-        [HttpDelete]
-        public IActionResult DeleteNote(int noteId)
-        {
-            var userId = (int)HttpContext.Items["userId"];
-            _noteService.DeleteNote(noteId, userId);
-            return Ok();
-        }
-
-        [HttpPost]
-        public IActionResult AddNote([FromBody] Note note)
-        {
-            var userId = (int)HttpContext.Items["userId"];
-            var addedNote = _noteService.AddNote(note, userId);
-            return Ok(addedNote);
-        }
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult<int>> Delete(int id)
+    {
+        return Ok(await noteService.Delete(id));
     }
 }

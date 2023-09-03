@@ -1,67 +1,39 @@
 using Microsoft.AspNetCore.Mvc;
-using ServerApp.Data;
 using ServerApp.Entities;
-using ServerApp.Interfaces;
+using ServerApp.Helpers;
+using ServerApp.Services.Interfaces;
 
-namespace ServerApp.Controllers
+namespace ServerApp.Controllers;
+
+[Route("api/[controller]/[action]")]
+[ApiController]
+public class UserController : ControllerBase
 {
-    [Route("[controller]/[action]")]
-    public class UserController : Controller
+    private readonly IUserService userService;
+
+    public UserController(IUserService userService)
     {
-        private readonly IUserService _userService;
+        this.userService = userService;
+    }
 
-        public UserController(IUserService userService, DataContext context)
-        {
-            _userService = userService;
-            _userService.DbContext(context);
-        }
+    [HttpPost, AllowAnonymous]
+    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
+    {
+        return Ok(await userService.Login(request));
+    }
+    [HttpPost, AllowAnonymous]
+    public async Task<ActionResult<LoginResponse>> Signup(SignupRequest signupRequest)
+    {
+        var response = await userService.Signup(signupRequest);
+        if (response == null)
+            return StatusCode(StatusCodes.Status500InternalServerError);
 
-        [HttpPost]
-        public IActionResult Login([FromBody] AuthRequest request)
-        {
-            try
-            {
-                var response = _userService.Login(request);
+        return CreatedAtAction(nameof(Signup), response);
+    }
 
-                if (response == null)
-                {
-                    return Ok("Username or Password is incorrect");
-                }
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status401Unauthorized, ex.Message);
-            }
-
-        }
-        [HttpPost]
-        public IActionResult Signup([FromBody] User user)
-        {
-            try
-            {
-                var response = _userService.Signup(user);
-
-                if (response == null)
-                {
-                    return StatusCode(StatusCodes.Status401Unauthorized, "Username or Password is incorrect");
-                }
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status401Unauthorized, ex.Message);
-            }
-
-        }
-
-        [HttpGet]
-        public IActionResult CheckUsernameExist(string username)
-        {
-            var response = _userService.CheckUsernameExist(username);
-            return new JsonResult(response);
-        }
+    [HttpGet("{username}"), AllowAnonymous]
+    public async Task<ActionResult<bool>> IsUsernameExist(string username)
+    {
+        return Ok(await userService.IsUsernameExist(username));
     }
 }
