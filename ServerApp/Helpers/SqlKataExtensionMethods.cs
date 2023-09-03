@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using ServerApp.Models;
+﻿using ServerApp.Models;
 using SqlKata;
 using SqlKata.Execution;
 
@@ -23,5 +22,10 @@ public static class SqlKataExtensionMethods
         item.ModifiedDate = DateTime.UtcNow;
 
         return query;
+    }
+
+    public static SqlResult Compile(this Query query)
+    {
+        return DbAccessor.Compiler.Compile(query);
     }
 }
