@@ -2,11 +2,14 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
+import { NgFor, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-notes',
-  templateUrl: './notes.component.html',
-  styles: [],
+    selector: 'app-notes',
+    templateUrl: './notes.component.html',
+    styles: [],
+    standalone: true,
+    imports: [NgFor, DatePipe],
 })
 export class NotesComponent implements OnInit {
   noteService = inject(NoteService);

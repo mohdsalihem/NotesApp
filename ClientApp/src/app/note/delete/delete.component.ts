@@ -1,12 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
 
 @Component({
-  selector: 'app-delete',
-  templateUrl: './delete.component.html',
-  styles: [],
+    selector: 'app-delete',
+    templateUrl: './delete.component.html',
+    styles: [],
+    standalone: true,
+    imports: [RouterLink],
 })
 export class DeleteComponent implements OnInit {
   route = inject(ActivatedRoute);

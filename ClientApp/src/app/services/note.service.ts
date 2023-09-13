@@ -24,7 +24,7 @@ export class NoteService {
   }
 
   delete(id: number) {
-    return this.http.delete<number>(`${this.apiUrl}/Delete${id}`);
+    return this.http.delete<number>(`${this.apiUrl}/Delete/${id}`);
   }
 
   add(note: Note) {

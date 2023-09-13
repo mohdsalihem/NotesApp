@@ -1,11 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styles: [],
+    selector: 'app-nav',
+    templateUrl: './nav.component.html',
+    styles: [],
+    standalone: true,
+    imports: [RouterLink, NgIf],
 })
 export class NavComponent implements OnInit {
   userService = inject(UserService);

@@ -1,14 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { Note } from 'src/app/models/note';
 import { UserService } from 'src/app/services/user.service';
 import { NoteService } from 'src/app/services/note.service';
+import { InputComponent } from '../../shared/input/input.component';
 
 @Component({
-  selector: 'app-add',
-  templateUrl: './add.component.html',
-  styles: [],
+    selector: 'app-add',
+    templateUrl: './add.component.html',
+    styles: [],
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        InputComponent,
+        RouterLink,
+    ],
 })
 export class AddComponent implements OnInit {
   title = new FormControl('', [

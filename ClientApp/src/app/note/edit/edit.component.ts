@@ -1,13 +1,20 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
+import { InputComponent } from '../../shared/input/input.component';
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styles: [],
+    selector: 'app-edit',
+    templateUrl: './edit.component.html',
+    styles: [],
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        InputComponent,
+        RouterLink,
+    ],
 })
 export class EditComponent implements OnInit {
   id = new FormControl();

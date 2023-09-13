@@ -9,7 +9,9 @@ import { User } from '../models/user';
   providedIn: 'root',
 })
 export class UserService {
-  public currentUser$ = new BehaviorSubject<User | null>(null);
+  public currentUser$ = new BehaviorSubject<User | null>(
+    JSON.parse(localStorage.getItem('currentUser')!),
+  );
   http = inject(HttpClient);
 
   apiUrl = environment.apiUrl + '/User';
