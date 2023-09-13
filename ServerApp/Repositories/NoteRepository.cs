@@ -1,4 +1,4 @@
-﻿using ServerApp.Entities;
+﻿using ServerApp.Dtos;
 using ServerApp.Helpers;
 using ServerApp.Helpers.Interfaces;
 using ServerApp.Models;
@@ -34,7 +34,7 @@ public class NoteRepository : INoteRepository
         return await genericRepository.Insert(note);
     }
 
-    public async Task<int> Update(NoteRequest request)
+    public async Task<int> Update(NoteRequestDto request)
     {
         return await dbAccessor.Factory
                     .Query<Note>()

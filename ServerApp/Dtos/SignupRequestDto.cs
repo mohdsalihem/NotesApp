@@ -1,6 +1,6 @@
-﻿namespace ServerApp.Entities;
+﻿namespace ServerApp.Dtos;
 
-public class SignupRequest
+public class SignupRequestDto
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }

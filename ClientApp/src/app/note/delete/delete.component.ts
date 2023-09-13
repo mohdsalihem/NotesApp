@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { INote } from 'src/app/models/note';
+import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
 
 @Component({
@@ -9,22 +9,20 @@ import { NoteService } from 'src/app/services/note.service';
   styles: [],
 })
 export class DeleteComponent implements OnInit {
-  note!: INote;
-  constructor(
-    private route: ActivatedRoute,
-    private noteService: NoteService,
-    private router: Router
-  ) {}
+  route = inject(ActivatedRoute);
+  noteService = inject(NoteService);
+  router = inject(Router);
+  note!: Note;
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
-    this.noteService.getNoteById(id).subscribe((data) => {
-      this.note = data;
+    this.noteService.get(id).subscribe((note) => {
+      this.note = note;
     });
   }
 
   deleteNote(id: number) {
-    this.noteService.deleteNote(id).subscribe((data) => {
+    this.noteService.delete(id).subscribe(() => {
       this.router.navigate(['/']);
     });
   }

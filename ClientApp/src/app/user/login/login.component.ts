@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -9,6 +9,9 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  userService = inject(UserService);
+  router = inject(Router);
+
   username = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
@@ -25,10 +28,9 @@ export class LoginComponent implements OnInit {
   });
 
   error = '';
-  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
-    if (this.userService.currentUser.value) {
+    if (this.userService.currentUser$.value) {
       this.router.navigate(['/']);
     }
   }
@@ -43,7 +45,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/note']);
           }
         },
-        error: (err) => {
+        error: () => {
           this.error = 'Invalid username or password';
         },
       });

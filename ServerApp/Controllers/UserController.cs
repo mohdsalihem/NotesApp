@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ServerApp.Entities;
+using ServerApp.Dtos;
 using ServerApp.Helpers;
 using ServerApp.Services.Interfaces;
 
@@ -17,12 +17,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost, AllowAnonymous]
-    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
+    public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto request)
     {
         return Ok(await userService.Login(request));
     }
     [HttpPost, AllowAnonymous]
-    public async Task<ActionResult<LoginResponse>> Signup(SignupRequest signupRequest)
+    public async Task<ActionResult<LoginResponseDto>> Signup(SignupRequestDto signupRequest)
     {
         var response = await userService.Signup(signupRequest);
         if (response == null)

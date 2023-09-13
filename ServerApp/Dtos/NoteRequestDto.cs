@@ -1,6 +1,6 @@
-﻿namespace ServerApp.Entities;
+﻿namespace ServerApp.Dtos;
 
-public class NoteRequest
+public class NoteRequestDto
 {
     public int Id { get; set; }
     public required string Title { get; set; }

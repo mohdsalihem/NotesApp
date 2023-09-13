@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { INote } from 'src/app/models/note';
+import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
 
 @Component({
@@ -9,18 +9,20 @@ import { NoteService } from 'src/app/services/note.service';
   styles: [],
 })
 export class NotesComponent implements OnInit {
-  constructor(private noteService: NoteService, private router: Router) {}
-  notes: INote[] = [];
-  allNotes: INote[] = [];
+  noteService = inject(NoteService);
+  router = inject(Router);
+
+  notes: Note[] = [];
+  allNotes: Note[] = [];
 
   ngOnInit(): void {
-    this.noteService.getAllNotes().subscribe((data) => {
-      this.allNotes = data;
-      this.notes = data;
+    this.noteService.getAll().subscribe((notes) => {
+      this.allNotes = notes;
+      this.notes = notes;
     });
   }
 
-  editNote(id: number) {
+  edit(id: number) {
     this.router.navigate(['note/edit', id]);
   }
 
@@ -28,16 +30,16 @@ export class NotesComponent implements OnInit {
     this.router.navigate(['note/delete', id]);
   }
 
-  addNote() {
+  add() {
     this.router.navigate(['note/add']);
   }
-  searchTerm(term: string) {
+  search(term: string) {
     if (!term) {
       this.notes = this.allNotes;
     }
 
     this.notes = this.allNotes.filter((note) =>
-      note.title.toLowerCase().includes(term.toLowerCase())
+      note.title.toLowerCase().includes(term.toLowerCase()),
     );
   }
 }

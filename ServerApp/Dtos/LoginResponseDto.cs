@@ -1,6 +1,6 @@
-namespace ServerApp.Entities;
+namespace ServerApp.Dtos;
 
-public class LoginResponse
+public class LoginResponseDto
 {
     public required string Username { get; set; }
     public required string Token { get; set; }

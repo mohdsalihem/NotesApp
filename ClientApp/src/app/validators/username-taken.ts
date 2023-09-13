@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidator,
@@ -12,19 +12,19 @@ import { UserService } from '../services/user.service';
   providedIn: 'root',
 })
 export class UsernameTaken implements AsyncValidator {
-  constructor(private userService: UserService) {}
+  userService = inject(UserService);
   validate = (
-    control: AbstractControl
+    control: AbstractControl,
   ): Observable<ValidationErrors | null> => {
     const isUsernameExist$ = of(control.value).pipe(
       delay(1000),
       switchMap((usename) =>
-        firstValueFrom(this.userService.checkUsernameExist(usename)).then(
+        firstValueFrom(this.userService.isUsernameExist(usename)).then(
           (response) => {
             return response && response.length ? { usernameTaken: true } : null;
-          }
-        )
-      )
+          },
+        ),
+      ),
     );
     return isUsernameExist$;
   };

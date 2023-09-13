@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { INote } from 'src/app/models/note';
+import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
 
 @Component({
@@ -29,29 +29,27 @@ export class EditComponent implements OnInit {
     description: this.description,
   });
 
-  constructor(
-    private noteService: NoteService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  noteService = inject(NoteService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
-    this.noteService.getNoteById(id).subscribe((data) => {
-      this.id.setValue(data.noteId);
-      this.title.setValue(data.title);
-      this.description.setValue(data.description);
+    this.noteService.get(id).subscribe((note) => {
+      this.id.setValue(note.id);
+      this.title.setValue(note.title);
+      this.description.setValue(note.description);
     });
   }
 
   updateNote() {
-    const note: INote = {
-      noteId: this.id.value,
+    const note: Note = {
+      id: this.id.value,
       title: this.title.value!,
       description: this.description.value!,
       modifiedDate: new Date(),
     };
-    this.noteService.updateNote(note).subscribe(() => {
+    this.noteService.update(note).subscribe(() => {
       this.router.navigate(['/']);
     });
   }

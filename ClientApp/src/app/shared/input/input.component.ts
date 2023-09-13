@@ -13,7 +13,5 @@ export class InputComponent implements OnInit {
   @Input() fieldName = 'Field';
   @Input() maskFormat = '';
 
-  constructor() {}
-
   ngOnInit(): void {}
 }

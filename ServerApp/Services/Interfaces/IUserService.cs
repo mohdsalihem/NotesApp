@@ -1,11 +1,10 @@
-using ServerApp.Models;
-using ServerApp.Entities;
+using ServerApp.Dtos;
 
 namespace ServerApp.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<LoginResponse> Login(LoginRequest request);
-    Task<LoginResponse> Signup(SignupRequest signupRequest);
+    Task<LoginResponseDto> Login(LoginRequestDto request);
+    Task<LoginResponseDto> Signup(SignupRequestDto signupRequest);
     Task<bool> IsUsernameExist(string username);
 }

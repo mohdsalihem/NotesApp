@@ -1,41 +1,33 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { INote } from '../models/note';
+import { Note } from '../models/note';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NoteService {
-  constructor(private http: HttpClient) {}
+  http = inject(HttpClient);
 
   apiUrl = environment.apiUrl + '/Note';
 
-  getAllNotes() {
-    return this.http.get<INote[]>(`${this.apiUrl}/GetUserNotes`);
+  getAll() {
+    return this.http.get<Note[]>(`${this.apiUrl}/GetAll`);
   }
 
-  getNoteById(id: number) {
-    return this.http.get<INote>(`${this.apiUrl}/GetNote`, {
-      params: {
-        noteId: id,
-      },
-    });
+  get(id: number) {
+    return this.http.get<Note>(`${this.apiUrl}/Get/${id}`);
   }
 
-  updateNote(note: INote) {
-    return this.http.put<string>(`${this.apiUrl}/UpdateNote`, note);
+  update(note: Note) {
+    return this.http.put<number>(`${this.apiUrl}/Update`, note);
   }
 
-  deleteNote(id: number) {
-    return this.http.delete(`${this.apiUrl}/DeleteNote`, {
-      params: {
-        noteId: id,
-      },
-    });
+  delete(id: number) {
+    return this.http.delete<number>(`${this.apiUrl}/Delete${id}`);
   }
 
-  addNote(note: INote) {
-    return this.http.post<INote>(`${this.apiUrl}/AddNote`, note);
+  add(note: Note) {
+    return this.http.post<Note>(`${this.apiUrl}/Insert`, note);
   }
 }

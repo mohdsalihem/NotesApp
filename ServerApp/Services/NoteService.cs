@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ServerApp.Entities;
+using ServerApp.Dtos;
 using ServerApp.Models;
 using ServerApp.Repositories.Interfaces;
 using ServerApp.Services.Interfaces;
@@ -27,14 +27,14 @@ public class NoteService : INoteService
         return await noteRepository.Get(id);
     }
 
-    public async Task<int> Insert(NoteRequest noteRequest)
+    public async Task<int> Insert(NoteRequestDto noteRequest)
     {
         Note note = mapper.Map<Note>(noteRequest);
 
         return await noteRepository.Insert(note);
     }
 
-    public async Task<int> Update(NoteRequest noteRequest)
+    public async Task<int> Update(NoteRequestDto noteRequest)
     {
         Note note = mapper.Map<Note>(noteRequest);
 

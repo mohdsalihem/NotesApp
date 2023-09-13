@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 
@@ -8,10 +8,12 @@ import { UserService } from '../services/user.service';
   styles: [],
 })
 export class NavComponent implements OnInit {
-  constructor(private userService: UserService, private router: Router) {}
+  userService = inject(UserService);
+  router = inject(Router);
   visibleLogout = false;
+
   ngOnInit(): void {
-    this.userService.currentUser.subscribe((user) => {
+    this.userService.currentUser$.subscribe((user) => {
       if (user) {
         this.visibleLogout = true;
       } else {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -13,13 +13,13 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private userService: UserService) {}
+  userService = inject(UserService);
 
   intercept(
     request: HttpRequest<unknown>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
-    const currentUser = this.userService.currentUser.value;
+    const currentUser = this.userService.currentUser$.value;
     const token = currentUser && currentUser.token ? currentUser.token : null;
     const isApiUrl = request.url.startsWith(environment.apiUrl);
     if (isApiUrl && token) {
@@ -40,7 +40,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
         const error = err.error.message || err.statusText;
         return throwError(() => new Error(err));
-      })
+      }),
     );
   }
 }

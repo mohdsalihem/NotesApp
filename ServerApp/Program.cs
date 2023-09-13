@@ -75,4 +75,4 @@ app.MapControllers();
 app.UseCors();
 app.UseAuthorization();
 
-app.Run();
+app.Run("https://localhost:4300/");

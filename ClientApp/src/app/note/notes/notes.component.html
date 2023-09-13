@@ -7,11 +7,11 @@
       type="text"
       placeholder="Type note title here"
       #searchBox
-      (input)="searchTerm(searchBox.value)"
+      (input)="search(searchBox.value)"
     />
   </div>
   <div class="mb-4 inline-block rounded-md bg-blue-500 px-3 py-2">
-    <a class="cursor-pointer font-medium text-white" (click)="addNote()"
+    <a class="cursor-pointer font-medium text-white" (click)="add()"
       >Add note</a
     >
   </div>
@@ -46,14 +46,14 @@
           <td class="px-6 py-4 text-right">
             <a
               class="font-medium text-blue-600 hover:underline"
-              (click)="editNote(note.noteId!)"
+              (click)="edit(note.id!)"
               >Edit</a
             >
           </td>
           <td class="px-6 py-4 text-right">
             <a
               class="font-medium text-blue-600 hover:underline"
-              (click)="deleteNote(note.noteId!)"
+              (click)="deleteNote(note.id!)"
               >Delete</a
             >
           </td>

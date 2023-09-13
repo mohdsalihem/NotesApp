@@ -1,6 +1,6 @@
 namespace ServerApp.Models
 {
-    public class User : Model
+    public class User : BaseModel
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }

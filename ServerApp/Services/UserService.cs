@@ -1,4 +1,4 @@
-using ServerApp.Entities;
+using ServerApp.Dtos;
 using ServerApp.Models;
 using ServerApp.Services.Interfaces;
 using ServerApp.Repositories.Interfaces;
@@ -20,7 +20,7 @@ public class UserService : IUserService
         this.jwtUtility = jwtUtility;
     }
 
-    public async Task<LoginResponse> Login(LoginRequest request)
+    public async Task<LoginResponseDto> Login(LoginRequestDto request)
     {
         User user =  await userRepository.Get(request.Username, request.Password);
         if (user == null)
@@ -28,14 +28,14 @@ public class UserService : IUserService
 
         var token = jwtUtility.GenerateToken(user);
         
-        return new LoginResponse()
+        return new LoginResponseDto()
         {
             Username = user.Username,
             Token = token
         };
     }
 
-    public async Task<LoginResponse> Signup(SignupRequest signupRequest)
+    public async Task<LoginResponseDto> Signup(SignupRequestDto signupRequest)
     {
         if (await IsUsernameExist(signupRequest.Username))
             throw new Exception("Username already exist. Please try another one.");
@@ -46,7 +46,7 @@ public class UserService : IUserService
 
         var token = jwtUtility.GenerateToken(user);
 
-        return new LoginResponse()
+        return new LoginResponseDto()
         {
             Username = user.Username,
             Token = token

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IUser } from 'src/app/models/user';
+import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
 import { UsernameTaken } from 'src/app/validators/username-taken';
 
@@ -11,6 +11,10 @@ import { UsernameTaken } from 'src/app/validators/username-taken';
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
+  userService = inject(UserService);
+  router = inject(Router);
+  usernameTaken = inject(UsernameTaken);
+
   firstName = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
@@ -24,7 +28,7 @@ export class SignupComponent implements OnInit {
   username = new FormControl(
     '',
     [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
-    [this.usernameTaken.validate]
+    [this.usernameTaken.validate],
   );
   password = new FormControl('', [
     Validators.required,
@@ -40,21 +44,16 @@ export class SignupComponent implements OnInit {
   });
 
   error = '';
-  constructor(
-    private userService: UserService,
-    private router: Router,
-    private usernameTaken: UsernameTaken
-  ) {}
 
   ngOnInit(): void {
-    if (this.userService.currentUser.value) {
+    if (this.userService.currentUser$.value) {
       this.router.navigate(['/']);
     }
   }
 
   signup() {
     this.error = '';
-    const user: IUser = {
+    const user: User = {
       firstName: this.firstName.value!,
       lastName: this.lastName.value!,
       username: this.username.value!,
@@ -66,7 +65,7 @@ export class SignupComponent implements OnInit {
           this.router.navigate(['/note']);
         }
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Something unexpected occured';
       },
     });

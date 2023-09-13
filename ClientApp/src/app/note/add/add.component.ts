@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { INote } from 'src/app/models/note';
+import { Note } from 'src/app/models/note';
 import { UserService } from 'src/app/services/user.service';
 import { NoteService } from 'src/app/services/note.service';
 
@@ -27,20 +27,18 @@ export class AddComponent implements OnInit {
     description: this.description,
   });
 
-  constructor(
-    private noteService: NoteService,
-    private router: Router,
-    private userService: UserService
-  ) {}
+  noteService = inject(NoteService);
+  router = inject(Router);
+  userService = inject(UserService);
 
   ngOnInit(): void {}
 
   addNote() {
-    const note: INote = {
+    const note: Note = {
       title: this.title.value!,
       description: this.description.value!,
     };
-    this.noteService.addNote(note).subscribe(() => {
+    this.noteService.add(note).subscribe(() => {
       this.router.navigate(['/']);
     });
   }

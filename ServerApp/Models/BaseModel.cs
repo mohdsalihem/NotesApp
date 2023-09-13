@@ -2,7 +2,7 @@
 
 namespace ServerApp.Models;
 
-public class Model
+public class BaseModel
 {
     [Key]
     [Ignore]

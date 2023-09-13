@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServerApp.Entities;
+using ServerApp.Dtos;
 using ServerApp.Models;
 using ServerApp.Services.Interfaces;
 
@@ -29,13 +29,13 @@ public class NoteController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> Insert(NoteRequest noteRequest)
+    public async Task<ActionResult<int>> Insert(NoteRequestDto noteRequest)
     {
         return CreatedAtAction(nameof(Insert), await noteService.Insert(noteRequest));
     }
 
     [HttpPut]
-    public async Task<ActionResult<int>> Update(NoteRequest noteRequest)
+    public async Task<ActionResult<int>> Update(NoteRequestDto noteRequest)
     {
         return Ok(await noteService.Update(noteRequest));
     }

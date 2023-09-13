@@ -6,7 +6,7 @@ using SqlKata.Execution;
 
 namespace ServerApp.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : Model
+public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
 {
     private readonly IDbAccessor dbAccessor;
     private readonly IHttpContextHelper httpContextHelper;
