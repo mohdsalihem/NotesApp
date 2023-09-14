@@ -5,11 +5,11 @@ import { NoteService } from 'src/app/services/note.service';
 import { NgFor, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-notes',
-    templateUrl: './notes.component.html',
-    styles: [],
-    standalone: true,
-    imports: [NgFor, DatePipe],
+  selector: 'app-note-list',
+  templateUrl: './note-list.component.html',
+  styles: [],
+  standalone: true,
+  imports: [NgFor, DatePipe],
 })
 export class NotesComponent implements OnInit {
   noteService = inject(NoteService);

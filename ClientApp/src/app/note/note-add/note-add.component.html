@@ -1,16 +1,17 @@
 <section class="container mx-auto">
-  <h1 class="my-8 text-xl">Edit Note</h1>
-  <form [formGroup]="editNoteForm" (ngSubmit)="updateNote()">
+  <h1 class="my-8 text-xl">Add Note</h1>
+  <form [formGroup]="addNoteForm" (ngSubmit)="add()">
     <label>Title</label>
     <app-input
-      [control]="title"
+      [control]="addNoteForm.controls.title"
+      ks
       fieldName="Title"
       placeholder="Enter Title"
     ></app-input>
 
     <label class="mt-3 inline-block">Description</label>
     <app-input
-      [control]="description"
+      [control]="addNoteForm.controls.description"
       fieldName="Description"
       placeholder="Enter Description"
       type="textarea"
@@ -18,10 +19,11 @@
 
     <div class="flex gap-6">
       <button
+        [disabled]="!addNoteForm.valid"
         type="submit"
-        class="mt-6 rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+        class="mt-6 rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-600 disabled:opacity-50"
       >
-        Save
+        Add
       </button>
       <button
         type="button"

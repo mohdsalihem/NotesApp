@@ -4,11 +4,11 @@ import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
 
 @Component({
-    selector: 'app-delete',
-    templateUrl: './delete.component.html',
-    styles: [],
-    standalone: true,
-    imports: [RouterLink],
+  selector: 'app-note-delete',
+  templateUrl: './note-delete.component.html',
+  styles: [],
+  standalone: true,
+  imports: [RouterLink],
 })
 export class DeleteComponent implements OnInit {
   route = inject(ActivatedRoute);

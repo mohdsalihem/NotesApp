@@ -4,8 +4,14 @@ import {
   AsyncValidator,
   ValidationErrors,
 } from '@angular/forms';
-import { Observable, of, delay, firstValueFrom } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of, delay } from 'rxjs';
+import {
+  debounce,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap,
+} from 'rxjs/operators';
 import { UserService } from '../services/user.service';
 
 @Injectable({
@@ -16,16 +22,13 @@ export class UsernameTaken implements AsyncValidator {
   validate = (
     control: AbstractControl,
   ): Observable<ValidationErrors | null> => {
-    const isUsernameExist$ = of(control.value).pipe(
-      delay(1000),
+    return of(control.value).pipe(
+      delay(500),
       switchMap((usename) =>
-        firstValueFrom(this.userService.isUsernameExist(usename)).then(
-          (response) => {
-            return response && response.length ? { usernameTaken: true } : null;
-          },
-        ),
+        this.userService
+          .isUsernameExist(usename)
+          .pipe(map((result) => (result ? { usernameTaken: true } : null))),
       ),
     );
-    return isUsernameExist$;
   };
 }

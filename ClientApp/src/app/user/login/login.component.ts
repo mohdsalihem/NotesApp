@@ -1,41 +1,46 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  Validators,
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { InputComponent } from '../../shared/input/input.component';
 import { NgIf } from '@angular/common';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: true,
-    imports: [
-        NgIf,
-        ReactiveFormsModule,
-        InputComponent,
-    ],
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [NgIf, ReactiveFormsModule, InputComponent],
 })
 export class LoginComponent implements OnInit {
   userService = inject(UserService);
   router = inject(Router);
 
-  username = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(50),
-  ]);
-  password = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(50),
-  ]);
   loginForm = new FormGroup({
-    username: this.username,
-    password: this.password,
+    username: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+      ],
+    }),
+    password: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+      ],
+    }),
   });
 
-  error = '';
+  errorMessage = '';
 
   ngOnInit(): void {
     if (this.userService.currentUser$.value) {
@@ -44,17 +49,20 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.error = '';
+    this.errorMessage = '';
     this.userService
-      .login(this.username.value!, this.password.value!)
+      .login(
+        this.loginForm.controls.username.value,
+        this.loginForm.controls.password.value,
+      )
       .subscribe({
-        next: (success) => {
-          if (success) {
+        next: (isSuccess) => {
+          if (isSuccess) {
             this.router.navigate(['/note']);
           }
         },
         error: () => {
-          this.error = 'Invalid username or password';
+          this.errorMessage = 'Invalid username or password';
         },
       });
   }

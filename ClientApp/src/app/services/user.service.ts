@@ -50,10 +50,6 @@ export class UserService {
   }
 
   isUsernameExist(username: string) {
-    return this.http.get<string>(`${this.apiUrl}/IsUsernameExist`, {
-      params: {
-        username: username,
-      },
-    });
+    return this.http.get<boolean>(`${this.apiUrl}/IsUsernameExist/${username}`);
   }
 }

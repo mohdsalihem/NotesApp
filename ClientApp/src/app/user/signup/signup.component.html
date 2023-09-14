@@ -1,39 +1,39 @@
 <div class="container mx-auto w-1/3">
   <h1 class="my-8 text-xl">Signup</h1>
   <div
-    *ngIf="error"
+    *ngIf="errorMessage"
     class="inline-block h-10 w-full rounded-md bg-red-300 py-2 text-center text-red-900"
   >
-    {{ error }}
+    {{ errorMessage }}
   </div>
   <form [formGroup]="signupForm" (ngSubmit)="signup()">
     <label>First Name</label>
     <app-input
-      [control]="firstName"
+      [control]="signupForm.controls.firstName"
       fieldName="First name"
       placeholder="Enter first name"
     ></app-input>
     <label class="mt-3 inline-block">Last Name</label>
     <app-input
-      [control]="lastName"
+      [control]="signupForm.controls.lastName"
       fieldName="Last name"
       placeholder="Enter last name"
     ></app-input>
     <label class="mt-3 inline-block">Username</label>
     <app-input
-      [control]="username"
+      [control]="signupForm.controls.username"
       fieldName="Username"
       placeholder="Enter username"
     ></app-input>
     <label class="mt-3 inline-block">Password</label>
     <app-input
       type="password"
-      [control]="password"
+      [control]="signupForm.controls.password"
       fieldName="Password"
       placeholder="Enter Password"
     ></app-input>
     <button
-      [disabled]="signupForm.invalid"
+      [disabled]="!signupForm.valid"
       type="submit"
       class="mt-6 rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-600 disabled:opacity-50"
     >
