@@ -4,13 +4,14 @@
 
 - Users can add, edit, update, delete and search their notes
 
-- Authorization implemented using JWT
+- Authorization implemented using JWT with refresh token
 
 - Users can add, edit, update, delete and search their notes
 
-- Styling is done using Tailwind CSS
-
-- Technologies used: ASP.NET Core Web API v6, Angular v14, Tailwind CSS
+- Technologies and libraries:
+  - Backend: ASP.NET Core Web API v7, SqlKata, Dapper, Autofac, AutoMapper
+  - Frontend: Angular v16 standalone component, Tailwind CSS
+  - Database: Sqlite for simplicity
 
 #### Screenshots
 
