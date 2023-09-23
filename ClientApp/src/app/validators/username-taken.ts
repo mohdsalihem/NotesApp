@@ -4,14 +4,7 @@ import {
   AsyncValidator,
   ValidationErrors,
 } from '@angular/forms';
-import { Observable, of, delay } from 'rxjs';
-import {
-  debounce,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  switchMap,
-} from 'rxjs/operators';
+import { Observable, of, delay, switchMap, map } from 'rxjs';
 import { UserService } from '../services/user.service';
 
 @Injectable({

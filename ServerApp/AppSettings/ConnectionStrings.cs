@@ -1,4 +1,4 @@
-﻿namespace ServerApp.Helpers;
+﻿namespace ServerApp.AppSettings;
 
 public class ConnectionStrings
 {

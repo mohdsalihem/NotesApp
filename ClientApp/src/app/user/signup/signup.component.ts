@@ -7,10 +7,10 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/user';
-import { UserService } from 'src/app/services/user.service';
 import { UsernameTaken } from 'src/app/validators/username-taken';
 import { InputComponent } from '../../shared/input/input.component';
 import { CommonModule } from '@angular/common';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, ReactiveFormsModule, InputComponent],
 })
 export class SignupComponent implements OnInit {
-  userService = inject(UserService);
+  authService = inject(AuthService);
   router = inject(Router);
   usernameTaken = inject(UsernameTaken);
 
@@ -63,7 +63,7 @@ export class SignupComponent implements OnInit {
   errorMessage = '';
 
   ngOnInit(): void {
-    if (this.userService.currentUser$.value) {
+    if (this.authService.currentUser$.value) {
       this.router.navigate(['/']);
     }
   }
@@ -71,7 +71,7 @@ export class SignupComponent implements OnInit {
   signup() {
     this.errorMessage = '';
     const user = this.signupForm.value as User;
-    this.userService.signup(user).subscribe({
+    this.authService.signup(user).subscribe({
       next: (success) => {
         if (success) {
           this.router.navigate(['/note']);

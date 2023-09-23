@@ -21,4 +21,11 @@ public class HttpContextHelper : IHttpContextHelper
             return Convert.ToInt32(httpContextAccessor.HttpContext.Items["userId"]);
         }
     }
+
+    public string GetRefreshTokenCookie() => httpContextAccessor?.HttpContext?.Request.Cookies["refreshToken"] ?? string.Empty;
+
+    public void SetRefreshTokenCookie(string refreshToken, DateTime expiryDate)
+    {
+        httpContextAccessor?.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken, new() { HttpOnly = true, Expires = expiryDate, SameSite = SameSiteMode.None, Secure = true });
+    }
 }

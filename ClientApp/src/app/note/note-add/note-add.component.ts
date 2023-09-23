@@ -43,7 +43,7 @@ export class NoteAddComponent implements OnInit {
 
   add() {
     const note = this.addNoteForm.value as Note;
-    this.noteService.add(note).subscribe(() => {
+    this.noteService.insert(note).subscribe(() => {
       this.router.navigate(['/']);
     });
   }

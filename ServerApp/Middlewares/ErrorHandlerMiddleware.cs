@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Collections;
 
-namespace ServerApp.Helpers;
+namespace ServerApp.Middlewares;
 
 public class ErrorHandlerMiddleware
 {

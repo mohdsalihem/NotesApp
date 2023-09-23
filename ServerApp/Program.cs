@@ -3,6 +3,8 @@ using Autofac;
 using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using ServerApp.AppSettings;
+using ServerApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +46,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        policy.SetIsOriginAllowed(origin => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
 
@@ -68,8 +70,6 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseMiddleware<JwtMiddleware>();
-
-app.UseAuthorization();
 
 app.MapControllers();
 app.UseCors();

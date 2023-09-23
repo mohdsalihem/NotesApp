@@ -6,7 +6,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 import { InputComponent } from '../../shared/input/input.component';
 import { NgIf } from '@angular/common';
 
@@ -18,7 +18,7 @@ import { NgIf } from '@angular/common';
   imports: [NgIf, ReactiveFormsModule, InputComponent],
 })
 export class LoginComponent implements OnInit {
-  userService = inject(UserService);
+  authService = inject(AuthService);
   router = inject(Router);
 
   loginForm = new FormGroup({
@@ -43,14 +43,14 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
 
   ngOnInit(): void {
-    if (this.userService.currentUser$.value) {
+    if (this.authService.currentUser$.value) {
       this.router.navigate(['/']);
     }
   }
 
   login() {
     this.errorMessage = '';
-    this.userService
+    this.authService
       .login(
         this.loginForm.controls.username.value,
         this.loginForm.controls.password.value,

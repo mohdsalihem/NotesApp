@@ -17,6 +17,14 @@ public class UserRepository : IUserRepository
         this.genericRepository = genericRepository;
     }
 
+    public async Task<User> Get(int id)
+    {
+        return await dbAccessor.Factory
+                    .Query<User>()
+                    .Where("id", id)
+                    .FirstOrDefaultAsync<User>();
+    }
+
     public async Task<User> Get(string username, string password)
     {
         return await dbAccessor.Factory
@@ -32,13 +40,6 @@ public class UserRepository : IUserRepository
     public async Task<int> Insert(User user)
     {
         return await genericRepository.Insert(user);
-    }
-
-    public async Task<IEnumerable<User>> GetAll()
-    {
-        return await dbAccessor.Factory
-                    .Query<User>()
-                    .GetAsync<User>();
     }
 
     public async Task<bool> IsUsernameExist(string username)

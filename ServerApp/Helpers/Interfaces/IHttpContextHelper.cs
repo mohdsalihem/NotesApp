@@ -2,5 +2,7 @@
 
 public interface IHttpContextHelper
 {
-    public int UserId { get; }
+    int UserId { get; }
+    string GetRefreshTokenCookie();
+    void SetRefreshTokenCookie(string refreshToken, DateTime expiryDate);
 }

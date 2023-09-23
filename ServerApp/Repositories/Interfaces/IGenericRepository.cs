@@ -1,6 +1,8 @@
-﻿namespace ServerApp.Repositories.Interfaces;
+﻿using ServerApp.Models;
 
-public interface IGenericRepository<T>
+namespace ServerApp.Repositories.Interfaces;
+
+public interface IGenericRepository<T> where T : BaseModel
 {
     Task<IEnumerable<T>> GetAll();
     Task<T> Get(int id);

@@ -9,25 +9,25 @@ import { Note } from '../models/note';
 export class NoteService {
   http = inject(HttpClient);
 
-  apiUrl = environment.apiUrl + '/Note';
+  apiUrl = environment.apiUrl + '/note';
 
   getAll() {
-    return this.http.get<Note[]>(`${this.apiUrl}/GetAll`);
+    return this.http.get<Note[]>(`${this.apiUrl}/getAll`);
   }
 
   get(id: number) {
-    return this.http.get<Note>(`${this.apiUrl}/Get/${id}`);
+    return this.http.get<Note>(`${this.apiUrl}/get/${id}`);
   }
 
   update(note: Note) {
-    return this.http.put<number>(`${this.apiUrl}/Update`, note);
+    return this.http.put<number>(`${this.apiUrl}/update`, note);
   }
 
   delete(id: number) {
-    return this.http.delete<number>(`${this.apiUrl}/Delete/${id}`);
+    return this.http.delete<number>(`${this.apiUrl}/delete/${id}`);
   }
 
-  add(note: Note) {
-    return this.http.post<Note>(`${this.apiUrl}/Insert`, note);
+  insert(note: Note) {
+    return this.http.post<Note>(`${this.apiUrl}/insert`, note);
   }
 }
