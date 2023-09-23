@@ -12,12 +12,6 @@ import { JwtInterceptor } from './app/interceptor/jwt.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // importProvidersFrom(
-    //   BrowserModule,
-    //   NoteModule,
-    //   UserModule,
-    //   AppRoutingModule,
-    // ),
     provideRouter(routes),
     provideHttpClient(withInterceptors([JwtInterceptor])),
   ],

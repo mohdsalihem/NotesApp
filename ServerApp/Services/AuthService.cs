@@ -39,7 +39,7 @@ public class AuthService : IAuthService
         {
             UserId = user.Id,
             Token = await tokenService.GenerateRefreshToken(),
-            ExpiryDate = tokenService.GetRefreshTokenExpiryDate()
+            ExpiryDate = tokenService.RefreshTokenExpiryDate
         };
         await refreshTokenRepository.Insert(refreshToken);
         httpContextHelper.SetRefreshTokenCookie(refreshToken.Token, refreshToken.ExpiryDate);

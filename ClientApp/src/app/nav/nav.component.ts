@@ -1,39 +1,37 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { TokenService } from '../services/token.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styles: [],
   standalone: true,
-  imports: [RouterLink, NgIf],
+  imports: [RouterLink, CommonModule],
 })
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   tokenService = inject(TokenService);
   router = inject(Router);
-  visibleLogout = false;
+  destroy$ = new Subject<void>();
 
-  ngOnInit(): void {
-    this.authService.currentUser$.subscribe((user) => {
-      if (user) {
-        this.visibleLogout = true;
-      } else {
-        this.visibleLogout = false;
-      }
-    });
+  get isSignedIn() {
+    return !!this.authService.currentUser();
   }
+
+  ngOnInit(): void {}
 
   logout() {
     this.authService.logout();
-    this.tokenService.revoke().subscribe();
+    this.tokenService.revoke().pipe(takeUntil(this.destroy$)).subscribe();
     this.router.navigate(['user/login']);
   }
 
-  login() {
-    this.router.navigate(['user/login']);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -9,7 +9,7 @@ public interface ITokenService
     Task<string> GenerateRefreshToken();
     string GenerateAccessToken(User user);
     JwtSecurityToken? ValidateAccessToken(string? token);
-    DateTime GetRefreshTokenExpiryDate();
+    DateTime RefreshTokenExpiryDate { get; }
     Task<LoginResponseDto> Refresh();
     Task<int> Revoke();
     Task<int> RevokeAll();

@@ -22,7 +22,7 @@ public class HttpContextHelper : IHttpContextHelper
         }
     }
 
-    public string GetRefreshTokenCookie() => httpContextAccessor?.HttpContext?.Request.Cookies["refreshToken"] ?? string.Empty;
+    public string RefreshTokenCookie { get => httpContextAccessor?.HttpContext?.Request.Cookies["refreshToken"] ?? string.Empty; }
 
     public void SetRefreshTokenCookie(string refreshToken, DateTime expiryDate)
     {

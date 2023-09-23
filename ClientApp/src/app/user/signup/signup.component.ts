@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,6 +11,7 @@ import { UsernameTaken } from 'src/app/validators/username-taken';
 import { InputComponent } from '../../shared/input/input.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -19,10 +20,11 @@ import { AuthService } from 'src/app/services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputComponent],
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   router = inject(Router);
   usernameTaken = inject(UsernameTaken);
+  destroy$ = new Subject<void>();
 
   signupForm = new FormGroup({
     firstName: new FormControl('', {
@@ -63,7 +65,7 @@ export class SignupComponent implements OnInit {
   errorMessage = '';
 
   ngOnInit(): void {
-    if (this.authService.currentUser$.value) {
+    if (this.authService.currentUser()) {
       this.router.navigate(['/']);
     }
   }
@@ -71,15 +73,23 @@ export class SignupComponent implements OnInit {
   signup() {
     this.errorMessage = '';
     const user = this.signupForm.value as User;
-    this.authService.signup(user).subscribe({
-      next: (success) => {
-        if (success) {
-          this.router.navigate(['/note']);
-        }
-      },
-      error: () => {
-        this.errorMessage = 'Something unexpected occured';
-      },
-    });
+    this.authService
+      .signup(user)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (success) => {
+          if (success) {
+            this.router.navigate(['/note']);
+          }
+        },
+        error: () => {
+          this.errorMessage = 'Something unexpected occured';
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   Validators,
   ReactiveFormsModule,
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { InputComponent } from '../../shared/input/input.component';
 import { NgIf } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +18,10 @@ import { NgIf } from '@angular/common';
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, InputComponent],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   router = inject(Router);
+  destroy$ = new Subject<void>();
 
   loginForm = new FormGroup({
     username: new FormControl('', {
@@ -43,7 +45,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
 
   ngOnInit(): void {
-    if (this.authService.currentUser$.value) {
+    if (this.authService.currentUser()) {
       this.router.navigate(['/']);
     }
   }
@@ -55,6 +57,7 @@ export class LoginComponent implements OnInit {
         this.loginForm.controls.username.value,
         this.loginForm.controls.password.value,
       )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (isSuccess) => {
           if (isSuccess) {
@@ -69,5 +72,10 @@ export class LoginComponent implements OnInit {
 
   signup() {
     this.router.navigate(['user/signup']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

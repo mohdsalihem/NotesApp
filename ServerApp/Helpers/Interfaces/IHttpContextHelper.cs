@@ -3,6 +3,6 @@
 public interface IHttpContextHelper
 {
     int UserId { get; }
-    string GetRefreshTokenCookie();
+    string RefreshTokenCookie { get; }
     void SetRefreshTokenCookie(string refreshToken, DateTime expiryDate);
 }

@@ -32,7 +32,7 @@ public class TokenService : ITokenService
         this.jwtCredentials = jwtCredentials.Value;
     }
 
-    public DateTime GetRefreshTokenExpiryDate() => DateTime.UtcNow.AddSeconds(10);
+    public DateTime RefreshTokenExpiryDate { get => DateTime.UtcNow.AddDays(7); }
 
     public string GenerateAccessToken(User user)
     {
@@ -42,7 +42,7 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(new[] { new Claim("userId", user.Id.ToString()) }),
-            Expires = DateTime.UtcNow.AddSeconds(3),
+            Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -90,7 +90,7 @@ public class TokenService : ITokenService
     public async Task<LoginResponseDto> Refresh()
     {
 
-        RefreshToken refreshToken = await refreshTokenRepository.Get(httpContextHelper.GetRefreshTokenCookie()) ?? throw new Exception("Token does not exist");
+        RefreshToken refreshToken = await refreshTokenRepository.Get(httpContextHelper.RefreshTokenCookie) ?? throw new Exception("Token does not exist");
 
         if (refreshToken.ExpiryDate < DateTime.UtcNow)
             throw new Exception("Token expired");
@@ -98,7 +98,7 @@ public class TokenService : ITokenService
         User user = await userRepository.Get(refreshToken.UserId);
         string accessToken = GenerateAccessToken(user);
         refreshToken.Token = await GenerateRefreshToken();
-        refreshToken.ExpiryDate = GetRefreshTokenExpiryDate();
+        refreshToken.ExpiryDate = RefreshTokenExpiryDate;
         await refreshTokenRepository.Update(refreshToken);
 
         httpContextHelper.SetRefreshTokenCookie(refreshToken.Token, refreshToken.ExpiryDate);
@@ -112,13 +112,13 @@ public class TokenService : ITokenService
 
     public async Task<int> Revoke()
     {
-        RefreshToken token = await refreshTokenRepository.Get(httpContextHelper.GetRefreshTokenCookie()) ?? throw new Exception("Token does not exist");
+        RefreshToken token = await refreshTokenRepository.Get(httpContextHelper.RefreshTokenCookie) ?? throw new Exception("Token does not exist");
         return await refreshTokenRepository.Delete(token.Id);
     }
 
     public async Task<int> RevokeAll()
     {
-        RefreshToken token = await refreshTokenRepository.Get(httpContextHelper.GetRefreshTokenCookie()) ?? throw new Exception("Token does not exist");
+        RefreshToken token = await refreshTokenRepository.Get(httpContextHelper.RefreshTokenCookie) ?? throw new Exception("Token does not exist");
         return await refreshTokenRepository.DeleteByUserId(token.UserId);
     }
 }

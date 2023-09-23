@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 
@@ -13,7 +13,7 @@ export class AuthService {
   apiUrl = environment.apiUrl + '/auth';
   private readonly CURRENT_USER = 'currentUser';
 
-  public currentUser$ = new BehaviorSubject<User | null>(
+  currentUser = signal<User | null>(
     JSON.parse(localStorage.getItem(this.CURRENT_USER)!),
   );
 
@@ -53,11 +53,11 @@ export class AuthService {
 
   setCurrentUser(currentUser: User) {
     localStorage.setItem(this.CURRENT_USER, JSON.stringify(currentUser));
-    this.currentUser$.next(currentUser);
+    this.currentUser.set(currentUser);
   }
 
   removeCurrentUser() {
-    this.currentUser$.next(null);
+    this.currentUser.set(null);
     localStorage.removeItem(this.CURRENT_USER);
   }
 }

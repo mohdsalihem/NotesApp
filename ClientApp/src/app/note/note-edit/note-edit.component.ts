@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,6 +9,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
 import { InputComponent } from '../../shared/input/input.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-note-edit',
@@ -17,10 +18,11 @@ import { InputComponent } from '../../shared/input/input.component';
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, RouterLink],
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, OnDestroy {
   noteService = inject(NoteService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  destroy$ = new Subject<void>();
 
   editNoteForm = new FormGroup({
     id: new FormControl(0, {
@@ -47,19 +49,30 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
-    this.noteService.get(id).subscribe((note) => {
-      this.editNoteForm.setValue({
-        id: note.id!,
-        title: note.title,
-        description: note.description,
+    this.noteService
+      .get(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((note) => {
+        this.editNoteForm.setValue({
+          id: note.id!,
+          title: note.title,
+          description: note.description,
+        });
       });
-    });
   }
 
   edit() {
     const note = this.editNoteForm.value as Note;
-    this.noteService.update(note).subscribe(() => {
-      this.router.navigate(['/']);
-    });
+    this.noteService
+      .update(note)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

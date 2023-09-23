@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,6 +10,7 @@ import { Note } from 'src/app/models/note';
 import { UserService } from 'src/app/services/user.service';
 import { NoteService } from 'src/app/services/note.service';
 import { InputComponent } from '../../shared/input/input.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-note-add',
@@ -18,10 +19,11 @@ import { InputComponent } from '../../shared/input/input.component';
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, RouterLink],
 })
-export class NoteAddComponent implements OnInit {
+export class NoteAddComponent implements OnInit, OnDestroy {
   noteService = inject(NoteService);
   router = inject(Router);
   userService = inject(UserService);
+  destroy$ = new Subject<void>();
 
   addNoteForm = new FormGroup({
     title: new FormControl('', {
@@ -43,8 +45,16 @@ export class NoteAddComponent implements OnInit {
 
   add() {
     const note = this.addNoteForm.value as Note;
-    this.noteService.insert(note).subscribe(() => {
-      this.router.navigate(['/']);
-    });
+    this.noteService
+      .insert(note)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
