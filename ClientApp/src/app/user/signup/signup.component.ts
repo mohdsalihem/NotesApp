@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,7 +11,8 @@ import { UsernameTaken } from 'src/app/validators/username-taken';
 import { InputComponent } from '../../shared/input/input.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { destroyNotifier } from 'src/app/helpers/destroyNotifier';
 
 @Component({
   selector: 'app-signup',
@@ -20,11 +21,11 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputComponent],
 })
-export class SignupComponent implements OnInit, OnDestroy {
+export class SignupComponent implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
   usernameTaken = inject(UsernameTaken);
-  destroy$ = new Subject<void>();
+  destroy$ = destroyNotifier();
 
   signupForm = new FormGroup({
     firstName: new FormControl('', {
@@ -86,10 +87,5 @@ export class SignupComponent implements OnInit, OnDestroy {
           this.errorMessage = 'Something unexpected occured';
         },
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

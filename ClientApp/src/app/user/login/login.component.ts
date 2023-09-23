@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   Validators,
   ReactiveFormsModule,
@@ -8,20 +8,21 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { InputComponent } from '../../shared/input/input.component';
-import { NgIf } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { takeUntil } from 'rxjs';
+import { destroyNotifier } from 'src/app/helpers/destroyNotifier';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, InputComponent],
+  imports: [CommonModule, ReactiveFormsModule, InputComponent],
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
-  destroy$ = new Subject<void>();
+  destroy$ = destroyNotifier();
 
   loginForm = new FormGroup({
     username: new FormControl('', {
@@ -72,10 +73,5 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   signup() {
     this.router.navigate(['user/signup']);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

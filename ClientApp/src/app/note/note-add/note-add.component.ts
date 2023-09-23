@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,7 +10,8 @@ import { Note } from 'src/app/models/note';
 import { UserService } from 'src/app/services/user.service';
 import { NoteService } from 'src/app/services/note.service';
 import { InputComponent } from '../../shared/input/input.component';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { destroyNotifier } from 'src/app/helpers/destroyNotifier';
 
 @Component({
   selector: 'app-note-add',
@@ -19,11 +20,11 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, RouterLink],
 })
-export class NoteAddComponent implements OnInit, OnDestroy {
+export class NoteAddComponent implements OnInit {
   noteService = inject(NoteService);
   router = inject(Router);
   userService = inject(UserService);
-  destroy$ = new Subject<void>();
+  destroy$ = destroyNotifier();
 
   addNoteForm = new FormGroup({
     title: new FormControl('', {
@@ -51,10 +52,5 @@ export class NoteAddComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.router.navigate(['/']);
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

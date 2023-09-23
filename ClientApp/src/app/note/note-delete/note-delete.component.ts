@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { destroyNotifier } from 'src/app/helpers/destroyNotifier';
 import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
 
@@ -11,12 +12,12 @@ import { NoteService } from 'src/app/services/note.service';
   standalone: true,
   imports: [RouterLink],
 })
-export class DeleteComponent implements OnInit, OnDestroy {
+export class DeleteComponent implements OnInit {
   route = inject(ActivatedRoute);
   noteService = inject(NoteService);
   router = inject(Router);
-  note!: Note;
-  destroy$ = new Subject<void>();
+  note: Note | null = null;
+  destroy$ = destroyNotifier();
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
@@ -35,10 +36,5 @@ export class DeleteComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.router.navigate(['/']);
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

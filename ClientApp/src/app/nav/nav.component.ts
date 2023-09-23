@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { TokenService } from '../services/token.service';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { destroyNotifier } from '../helpers/destroyNotifier';
 
 @Component({
   selector: 'app-nav',
@@ -12,11 +13,11 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: true,
   imports: [RouterLink, CommonModule],
 })
-export class NavComponent implements OnInit, OnDestroy {
+export class NavComponent implements OnInit {
   authService = inject(AuthService);
   tokenService = inject(TokenService);
   router = inject(Router);
-  destroy$ = new Subject<void>();
+  destroy$ = destroyNotifier();
 
   get isSignedIn() {
     return !!this.authService.currentUser();
@@ -25,13 +26,8 @@ export class NavComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   logout() {
-    this.authService.logout();
     this.tokenService.revoke().pipe(takeUntil(this.destroy$)).subscribe();
+    this.authService.logout();
     this.router.navigate(['user/login']);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

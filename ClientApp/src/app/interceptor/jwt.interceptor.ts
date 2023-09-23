@@ -41,8 +41,8 @@ export const JwtInterceptor: HttpInterceptorFn = (req, next) => {
             return throwError(() => new Error('Token not found'));
           }),
           catchError((err: HttpErrorResponse) => {
-            authService.logout();
             tokenService.revoke();
+            authService.logout();
             location.reload();
             return throwError(() => new Error(err.error));
           }),

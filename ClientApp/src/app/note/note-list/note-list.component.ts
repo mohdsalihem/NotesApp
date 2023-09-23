@@ -1,21 +1,22 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Note } from 'src/app/models/note';
 import { NoteService } from 'src/app/services/note.service';
-import { NgFor, DatePipe } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { takeUntil } from 'rxjs';
+import { destroyNotifier } from 'src/app/helpers/destroyNotifier';
 
 @Component({
   selector: 'app-note-list',
   templateUrl: './note-list.component.html',
   styles: [],
   standalone: true,
-  imports: [NgFor, DatePipe],
+  imports: [CommonModule],
 })
-export class NotesComponent implements OnInit, OnDestroy {
+export class NotesComponent implements OnInit {
   noteService = inject(NoteService);
   router = inject(Router);
-  destroy$ = new Subject<void>();
+  destroy$ = destroyNotifier();
   notes: Note[] = [];
   allNotes: Note[] = [];
 
@@ -48,10 +49,5 @@ export class NotesComponent implements OnInit, OnDestroy {
     this.notes = this.allNotes.filter((note) =>
       note.title.toLowerCase().includes(term.toLowerCase()),
     );
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }
