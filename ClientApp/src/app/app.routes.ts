@@ -1,17 +1,17 @@
 import { Routes } from '@angular/router';
-import { AboutComponent } from './app/about/about.component';
-import { AuthGuard } from './app/guards/auth.guard';
+import { AboutComponent } from './about/about.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'about', component: AboutComponent },
   {
     path: 'user',
-    loadChildren: () => import('./app/user/user.routes'),
+    loadChildren: () => import('./user/user.routes'),
   },
   {
     path: 'note',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./app/note/note.routes'),
+    loadChildren: () => import('./note/note.routes'),
   },
   { path: '**', redirectTo: 'note' },
 ];
