@@ -13,7 +13,7 @@ import { destroyNotifier } from 'src/app/helpers/destroyNotifier';
   standalone: true,
   imports: [CommonModule],
 })
-export class NotesComponent implements OnInit {
+export class NoteListComponent implements OnInit {
   noteService = inject(NoteService);
   router = inject(Router);
   destroy$ = destroyNotifier();

@@ -12,7 +12,7 @@ import { NoteService } from 'src/app/services/note.service';
   standalone: true,
   imports: [RouterLink],
 })
-export class DeleteComponent implements OnInit {
+export class NoteDeleteComponent implements OnInit {
   route = inject(ActivatedRoute);
   noteService = inject(NoteService);
   router = inject(Router);

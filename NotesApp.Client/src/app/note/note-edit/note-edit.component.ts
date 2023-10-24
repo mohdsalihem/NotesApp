@@ -19,7 +19,7 @@ import { destroyNotifier } from 'src/app/helpers/destroyNotifier';
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, RouterLink],
 })
-export class EditComponent implements OnInit {
+export class NoteEditComponent implements OnInit {
   noteService = inject(NoteService);
   router = inject(Router);
   route = inject(ActivatedRoute);
