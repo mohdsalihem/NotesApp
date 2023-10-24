@@ -10,5 +10,5 @@ import { NavComponent } from './nav/nav.component';
   imports: [NavComponent, RouterOutlet],
 })
 export class AppComponent {
-  title = 'ClientApp';
+  title = 'NotesApp.Client';
 }
