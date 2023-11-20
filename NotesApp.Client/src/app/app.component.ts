@@ -9,6 +9,4 @@ import { NavComponent } from './nav/nav.component';
   standalone: true,
   imports: [NavComponent, RouterOutlet],
 })
-export class AppComponent {
-  title = 'NotesApp.Client';
-}
+export class AppComponent {}
