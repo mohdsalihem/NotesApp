@@ -1,24 +1,17 @@
 ## Notes App
 
-- Simple note-taking app. Users can sign up and login into the app. Authorization implemented using JWT
+- A simple note-taking web app where users can sign up, log in, and manage their notes
 
-- Users can add, edit, update, delete and search their notes
+- Integrated JSON Web Token-based authentication and implemented token refresh mechanism, stored in an HttpOnly cookie to enhance security
 
-- Authorization implemented using JWT with refresh token
+- Implemented repository design pattern to create an abstraction between the data access and business logic layers. Additionally, the unit of work design pattern to aggregate multiple database operations into a single transaction
 
-- Users can add, edit, update, delete and search their notes
-
-- Technologies and libraries:
-  - Backend: ASP.NET Core Web API v7, SqlKata, Dapper, Autofac, AutoMapper
-  - Frontend: Angular v16 standalone component, Tailwind CSS
-  - Database: Sqlite for simplicity
+- Technologies: ASP.NET Core Web API v8, Dapper, SqlKata, Autofac, AutoMapper, Angular v17, Tailwind CSS, SQLite
 
 #### Screenshots
 
 Login page
+<img title="" src="./Screenshots/Login.png" alt="Login page">
 
-<img title="" src="./Screenshots/Login.png" alt="">
-
-Notes home page
-
-<img title="" src="./Screenshots/Notes.png" alt="">
+Home page
+<img title="" src="./Screenshots/Notes.png" alt="Home page">
