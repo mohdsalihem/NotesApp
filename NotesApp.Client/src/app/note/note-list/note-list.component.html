@@ -1,15 +1,15 @@
 <div class="container mx-auto">
-  <div class="mb-4 mt-8 flex items-center gap-5">
+  <div class="mb-16 mt-32 flex items-center gap-20">
     <span>Search</span
     ><input
-      class="w-1/4 rounded border border-gray-400 px-3 py-1.5 focus:border-indigo-400 focus:outline-none"
+      class="w-1/4 rounded border border-gray-400 px-12 py-6 focus:border-indigo-400 focus:outline-none"
       type="text"
       placeholder="Type note title"
       #searchBox
       (input)="search(searchBox.value)"
     />
   </div>
-  <div class="mb-4 inline-block rounded-md bg-blue-500 px-3 py-2">
+  <div class="mb-16 inline-block rounded-md bg-blue-500 px-12 py-8">
     <a class="cursor-pointer font-medium text-white" (click)="add()"
       >Add note</a
     >
@@ -19,14 +19,14 @@
     <table class="w-full text-left text-sm text-gray-500">
       <thead class="bg-gray-100 text-xs uppercase text-gray-700">
         <tr>
-          <th scope="col" class="px-6 py-3">Title</th>
-          <th scope="col" class="px-6 py-3">Description</th>
-          <th scope="col" class="px-6 py-3">Created Date</th>
-          <th scope="col" class="px-6 py-3">Modified Date</th>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-24 py-12">Title</th>
+          <th scope="col" class="px-24 py-12">Description</th>
+          <th scope="col" class="px-24 py-12">Created Date</th>
+          <th scope="col" class="px-24 py-12">Modified Date</th>
+          <th scope="col" class="px-24 py-12">
             <span class="sr-only">Edit</span>
           </th>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-24 py-12">
             <span class="sr-only">Delete</span>
           </th>
         </tr>
@@ -35,21 +35,21 @@
         <tr *ngFor="let note of notes" class="border-b bg-white">
           <th
             scope="row"
-            class="whitespace-nowrap px-6 py-4 font-medium text-gray-900"
+            class="whitespace-nowrap px-24 py-16 font-medium text-gray-900"
           >
             {{ note.title }}
           </th>
-          <td class="px-6 py-4">{{ note.description }}</td>
-          <td class="px-6 py-4">{{ note.createdDate | date: "short" }}</td>
-          <td class="px-6 py-4">{{ note.modifiedDate | date: "short" }}</td>
-          <td class="px-6 py-4 text-right">
+          <td class="px-24 py-16">{{ note.description }}</td>
+          <td class="px-24 py-16">{{ note.createdDate | date: "short" }}</td>
+          <td class="px-24 py-16">{{ note.modifiedDate | date: "short" }}</td>
+          <td class="px-24 py-16 text-right">
             <a
               class="font-medium text-blue-600 hover:underline"
               (click)="edit(note.id!)"
               >Edit</a
             >
           </td>
-          <td class="px-6 py-4 text-right">
+          <td class="px-24 py-16 text-right">
             <a
               class="font-medium text-blue-600 hover:underline"
               (click)="deleteNote(note.id!)"
